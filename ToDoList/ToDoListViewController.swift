@@ -10,14 +10,17 @@ import UIKit
 
 class ToDoListViewController: UITableViewController {
 
-    let itemArray = ["Find Mike", "Buy Eggs", "Go to Gym", "Clean House", "Pay Bills"]
+    var itemArray = ["Find Mike", "Buy Eggs", "Go to Gym", "Clean House", "Pay Bills"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         itemArray.count
     }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         cell.textLabel?.text = itemArray[indexPath.row]
@@ -33,6 +36,7 @@ class ToDoListViewController: UITableViewController {
     //   - indexPath: Ścieżka indeksu, która określa lokalizację wiersza w tabeli.
     // - return: Zwraca konfigurowany obiekt `UITableViewCell`.
     
+    //MARK: - TableView Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //print(itemArray[indexPath.row]) - wypis w konsoli który wiersz jest wybierany
@@ -47,5 +51,35 @@ class ToDoListViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)  // wyłączenie i właczenie podswietlenia kiedy dotykamy na dany wiersz
     }
     
+    //MARK: - Add New Items
+    
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        var alertText = UITextField() // dodatkowa zmienna lokalna
+        
+        let alert = UIAlertController(title: "Dodaj zadanie", message: "", preferredStyle: .alert)
+        
+        
+        let action = UIAlertAction(title: "Dodaj", style: .default) { (action) in
+            //co sie stanie gdy użytkownik kliknie przyciks dodaj(plus)
+          
+            self.itemArray.append(alertText.text!)// dodanie elementu do tablicy 'itemArray'
+            self.tableView.reloadData() // ponowne załadowanie danych w tabeli
+        }
+        
+        
+        
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Dodaj nowe zaplanowane zadanie"
+            alertText = alertTextField
+            
+        }
+       
+    
+        alert.addAction(action)
+    present(alert, animated: true, completion: nil)
+    
+        
+    }
 }
 
