@@ -10,17 +10,25 @@ import UIKit
 
 class ToDoListViewController: UITableViewController {
 
-    var itemArray = ["Find Mike", "Buy Eggs", "Go to Gym", "Clean House", "Pay Bills"]
+    var itemArray = [Item]()
     
     let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let items = defaults.array(forKey: "ToDoList") as? [String]{
-            itemArray = items
-            
-        }
+        let newItem1 = Item()
+        newItem1.title = "New Item1"
+        itemArray.append(newItem1)
+        
+        let newItem2 = Item()
+        newItem2.title = "New Item2"
+        itemArray.append(newItem2)
+        
+        let newItem3 = Item()
+        newItem3.title = "New Item3"
+        itemArray.append(newItem3)
+        
         // Do any additional setup after loading the view.
     }
     
@@ -30,7 +38,14 @@ class ToDoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
-        cell.textLabel?.text = itemArray[indexPath.row]
+
+        cell.textLabel?.text = itemArray[indexPath.row].title
+        
+        if itemArray[indexPath.row].isDone == true {
+            cell.accessoryType = .checkmark
+        }else {
+            cell.accessoryType = .none
+        }// aktywowanie checkmark'a kiedy nie jest włączony i jego dezaktywacja
         
         return cell
     }
@@ -44,20 +59,25 @@ class ToDoListViewController: UITableViewController {
     // - return: Zwraca konfigurowany obiekt `UITableViewCell`.
     
     
+    
+    
+    
     //MARK: - TableView Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //print(itemArray[indexPath.row]) - wypis w konsoli który wiersz jest wybierany
         
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        }else
-        {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }// aktywowanie checkmark'a kiedy nie jest włączony i jego dezaktywacja
-        
+        if itemArray[indexPath.row].isDone == false {
+            itemArray[indexPath.row].isDone = true
+        }else{
+                itemArray[indexPath.row].isDone = false
+        }
+
         tableView.deselectRow(at: indexPath, animated: true)  // wyłączenie i właczenie podswietlenia kiedy dotykamy na dany wiersz
     }
+    
+    
+    
     
     
     //MARK: - Add New Items
@@ -71,8 +91,11 @@ class ToDoListViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Dodaj", style: .default) { (action) in
             //co sie stanie gdy użytkownik kliknie przyciks dodaj(plus)
+            
+            let newItem = Item()
+            newItem.title = alertText.text!
           
-            self.itemArray.append(alertText.text!)// dodanie elementu do tablicy 'itemArray'
+            self.itemArray.append(newItem) // dodanie elementu do tablicy 'itemArray'
             
             self.defaults.set(self.itemArray, forKey: "ToDoList") // przypisanie danych do stałej
             

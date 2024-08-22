@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 74;
+	objectVersion = 76;
 	objects = {
 
 /* Begin PBXFileReference section */
@@ -14,8 +14,8 @@
 		21A26E912C734DDC007638CD /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				/Localized/LaunchScreen.storyboard,
-				/Localized/Main.storyboard,
+				"/Localized/Supportnig Files/LaunchScreen.storyboard",
+				/Localized/Views/Main.storyboard,
 				Info.plist,
 			);
 			target = 21A26E7E2C734DDB007638CD /* ToDoList */;
@@ -27,8 +27,8 @@
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			buildPhase = 21A26E7D2C734DDB007638CD /* Resources */;
 			membershipExceptions = (
-				Base.lproj/LaunchScreen.storyboard,
-				Base.lproj/Main.storyboard,
+				"Supportnig Files/Base.lproj/LaunchScreen.storyboard",
+				Views/Base.lproj/Main.storyboard,
 			);
 		};
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
