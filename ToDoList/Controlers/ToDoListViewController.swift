@@ -19,6 +19,7 @@ class ToDoListViewController: UITableViewController {
         
         let newItem1 = Item()
         newItem1.title = "New Item1"
+        newItem1.isDone = true
         itemArray.append(newItem1)
         
         let newItem2 = Item()
@@ -39,9 +40,13 @@ class ToDoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
 
-        cell.textLabel?.text = itemArray[indexPath.row].title
         
-        if itemArray[indexPath.row].isDone == true {
+        let item = itemArray[indexPath.row] // uproszenie i skrócenie kodu dodając nowa stałą
+        
+        cell.textLabel?.text = item.title
+        
+        
+        if item.isDone == true {
             cell.accessoryType = .checkmark
         }else {
             cell.accessoryType = .none
@@ -67,12 +72,19 @@ class ToDoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //print(itemArray[indexPath.row]) - wypis w konsoli który wiersz jest wybierany
         
+        itemArray[indexPath.row].isDone = !itemArray[indexPath.row].isDone
+        // kod wyzej wykonuje dokładnie to samo co poniżej
+/*
         if itemArray[indexPath.row].isDone == false {
             itemArray[indexPath.row].isDone = true
         }else{
                 itemArray[indexPath.row].isDone = false
         }
-
+*/
+        
+        
+        
+        tableView.reloadData()
         tableView.deselectRow(at: indexPath, animated: true)  // wyłączenie i właczenie podswietlenia kiedy dotykamy na dany wiersz
     }
     
