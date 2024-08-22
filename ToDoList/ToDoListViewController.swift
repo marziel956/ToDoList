@@ -12,8 +12,15 @@ class ToDoListViewController: UITableViewController {
 
     var itemArray = ["Find Mike", "Buy Eggs", "Go to Gym", "Clean House", "Pay Bills"]
     
+    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let items = defaults.array(forKey: "ToDoList") as? [String]{
+            itemArray = items
+            
+        }
         // Do any additional setup after loading the view.
     }
     
@@ -36,6 +43,7 @@ class ToDoListViewController: UITableViewController {
     //   - indexPath: Ścieżka indeksu, która określa lokalizację wiersza w tabeli.
     // - return: Zwraca konfigurowany obiekt `UITableViewCell`.
     
+    
     //MARK: - TableView Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -51,6 +59,7 @@ class ToDoListViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)  // wyłączenie i właczenie podswietlenia kiedy dotykamy na dany wiersz
     }
     
+    
     //MARK: - Add New Items
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -64,6 +73,9 @@ class ToDoListViewController: UITableViewController {
             //co sie stanie gdy użytkownik kliknie przyciks dodaj(plus)
           
             self.itemArray.append(alertText.text!)// dodanie elementu do tablicy 'itemArray'
+            
+            self.defaults.set(self.itemArray, forKey: "ToDoList") // przypisanie danych do stałej
+            
             self.tableView.reloadData() // ponowne załadowanie danych w tabeli
         }
         
