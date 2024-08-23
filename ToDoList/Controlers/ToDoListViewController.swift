@@ -12,14 +12,20 @@ class ToDoListViewController: UITableViewController {
 
     var itemArray = [Item]()
     
-    let defaults = UserDefaults.standard
+  
+    //let itemKey = "TodoListArray"
     
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Item.plist")
+  
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print(dataFilePath)
+        
+     
+        
         let newItem1 = Item()
         newItem1.title = "New Item1"
-        newItem1.isDone = true
         itemArray.append(newItem1)
         
         let newItem2 = Item()
@@ -30,12 +36,20 @@ class ToDoListViewController: UITableViewController {
         newItem3.title = "New Item3"
         itemArray.append(newItem3)
         
+      //  if let items = defaults.array(forKey: itemKey) as? [Item]{
+            
+          //  itemArray = items
+
+        }
+         
         // Do any additional setup after loading the view.
-    }
+    
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        itemArray.count
+        return itemArray.count
     }
+    
+    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
@@ -45,12 +59,18 @@ class ToDoListViewController: UITableViewController {
         
         cell.textLabel?.text = item.title
         
-        
+        cell.accessoryType =  item.isDone ? .checkmark : .none   // aktywowanie checkmark'a kiedy nie jest włączony i jego dezaktywacja kod ponizej wykonuje to samo
+       
+         /*
+          
         if item.isDone == true {
             cell.accessoryType = .checkmark
         }else {
             cell.accessoryType = .none
-        }// aktywowanie checkmark'a kiedy nie jest włączony i jego dezaktywacja
+        }]
+          
+        */
+        
         
         return cell
     }
@@ -81,10 +101,10 @@ class ToDoListViewController: UITableViewController {
                 itemArray[indexPath.row].isDone = false
         }
 */
+        saveItems()
         
         
-        
-        tableView.reloadData()
+    
         tableView.deselectRow(at: indexPath, animated: true)  // wyłączenie i właczenie podswietlenia kiedy dotykamy na dany wiersz
     }
     
@@ -109,9 +129,10 @@ class ToDoListViewController: UITableViewController {
           
             self.itemArray.append(newItem) // dodanie elementu do tablicy 'itemArray'
             
-            self.defaults.set(self.itemArray, forKey: "ToDoList") // przypisanie danych do stałej
-            
-            self.tableView.reloadData() // ponowne załadowanie danych w tabeli
+            self.saveItems()
+       
+        
+           
         }
         
         
@@ -124,9 +145,35 @@ class ToDoListViewController: UITableViewController {
        
     
         alert.addAction(action)
+        
     present(alert, animated: true, completion: nil)
     
         
     }
+    
+    //MARK: - Model Manupulation Methods
+
+
+
+    func saveItems() {
+        let encoder = PropertyListEncoder()
+        
+        
+        do{
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+        }catch {
+            print("error encoding item array, \(error)")
+            
+        }
+        
+        tableView.reloadData() // ponowne załadowanie danych w tabeli
+    }
+    
+    
 }
+
+
+
+
 
