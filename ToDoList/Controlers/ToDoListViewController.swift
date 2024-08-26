@@ -7,34 +7,34 @@
 //
 
 import UIKit
+import CoreData
 
 class ToDoListViewController: UITableViewController {
 
     var itemArray = [Item]()
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    // zawarty tu kod daje dostęp do AppDelegate)
     
-  
     //let itemKey = "TodoListArray"
-    
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Item.plist")
   
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(dataFilePath)
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+
+       loadItem()
         
-     
-        
-        let newItem1 = Item()
-        newItem1.title = "New Item1"
-        itemArray.append(newItem1)
-        
-        let newItem2 = Item()
-        newItem2.title = "New Item2"
-        itemArray.append(newItem2)
-        
-        let newItem3 = Item()
-        newItem3.title = "New Item3"
-        itemArray.append(newItem3)
+//        let newItem1 = Item()
+//        newItem1.title = "New Item1"
+//        itemArray.append(newItem1)
+//        
+//        let newItem2 = Item()
+//        newItem2.title = "New Item2"
+//        itemArray.append(newItem2)
+//        
+//        let newItem3 = Item()
+//        newItem3.title = "New Item3"
+//        itemArray.append(newItem3)
         
       //  if let items = defaults.array(forKey: itemKey) as? [Item]{
             
@@ -124,8 +124,10 @@ class ToDoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Dodaj", style: .default) { (action) in
             //co sie stanie gdy użytkownik kliknie przyciks dodaj(plus)
             
-            let newItem = Item()
+                           
+            let newItem = Item(context: self.context)
             newItem.title = alertText.text!
+            newItem.isDone = false
           
             self.itemArray.append(newItem) // dodanie elementu do tablicy 'itemArray'
             
@@ -156,21 +158,32 @@ class ToDoListViewController: UITableViewController {
 
 
     func saveItems() {
-        let encoder = PropertyListEncoder()
+
         
         
         do{
-            let data = try encoder.encode(itemArray)
-            try data.write(to: dataFilePath!)
+           
+           try context.save()
+          
         }catch {
-            print("error encoding item array, \(error)")
+            
+        print("error saving context, \(error)")
             
         }
-        
-        tableView.reloadData() // ponowne załadowanie danych w tabeli
+       
+        self.tableView.reloadData() // ponowne załadowanie danych w tabeli
     }
     
     
+    
+    func loadItem() {
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        do{
+            itemArray = try context.fetch(request)
+        }catch{
+            print("error fetching data from context, \(error)")
+        }
+    }
 }
 
 
